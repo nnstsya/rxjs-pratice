@@ -9,8 +9,8 @@ interval(300).pipe(
     take(7),
     timestamp(),
     scan((acc, curr) => {
-        const timePassed = curr.timestamp + acc.timestamp;
+        const timePassed = curr.timestamp - acc.startTimestamp;
         console.log(`Минуло: ${timePassed} мс`);
-        return curr;
-    })
+        return { ...curr, startTimestamp: acc.startTimestamp };
+    }, { startTimestamp: Date.now() })
 ).subscribe();

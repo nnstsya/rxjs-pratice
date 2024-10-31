@@ -9,7 +9,7 @@ interval(300).pipe(
     take(7),
     timestamp(),
     scan((acc, curr) => {
-        const timePassed = curr.timestamp - acc.timestamp;
+        const timePassed = curr.timestamp + acc.timestamp;
         console.log(`Минуло: ${timePassed} мс`);
         return curr;
     })

@@ -2,25 +2,25 @@
 // 	Задача: Створити Observable, який має певну ймовірність викинути помилку (наприклад, 30%).
 // 	Якщо помилка трапляється, замість завершення потоку відновлювати його, використовуючи запасні дані.
 
-import { catchError, delay, of, retryWhen, switchMap, tap, throwError } from 'rxjs';
+import { catchError, delay, Observable, of, switchMap } from 'rxjs';
 
-const obs5 = of([]).pipe(
-    switchMap(() => Math.random() < 0.3
-        ? throwError(() => new Error('Щось пішло не так, використовуємо запасні дані...'))
-        : of('Дані')
-    ),
-    catchError(err => {
+const obs5 = new Observable(subscriber => {
+    const randomValue = Math.random();
+    if (randomValue < 0.3) {
+        subscriber.error(new Error('Щось пішло не так, використовуємо запасні дані...'));
+    } else {
+        subscriber.next('Дані');
+        subscriber.complete();
+    }
+}).pipe(
+    catchError((err, caught) => {
         console.error('Помилка:', err.message);
-        return of('Запасні дані');
+        return caught
+            .pipe(
+                delay(1000),
+                switchMap(() => of('Запасні дані'))
+            );
     }),
-    retryWhen(errors =>
-        errors.pipe(
-            delay(1000)
-        )
-    ),
-    tap((data) => {
-        console.log('Отримані дані:', data);
-    })
 );
 
-obs5.subscribe();
+obs5.subscribe(data => console.log('Отримані дані:', data));

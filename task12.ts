@@ -26,12 +26,12 @@ from([oneSecondSource, twoSecondSource, threeSecondSource, fourSecondSource, fiv
     exhaustMap(source => source)
 ).subscribe(result => console.log('exhaustMap1:', result));
 
-from([oneSecondSource, twoSecondSource, threeSecondSource, fourSecondSource, fiveSecondSource]).pipe(
+from([oneSecondSource, twoSecondSource, threeSecondSource, fourSecondSource]).pipe(
     exhaustMap(() => fiveSecondSource)
 ).subscribe(result => console.log('exhaustMap2:', result));
 
 fiveSecondSource.pipe(
-    exhaustMap(() => forkJoin([oneSecondSource, twoSecondSource, threeSecondSource, fourSecondSource, fiveSecondSource]))
+    exhaustMap(() => forkJoin([oneSecondSource, twoSecondSource, threeSecondSource, fourSecondSource]))
 ).subscribe(result => console.log('exhaustMap3:', result));
 
 // switchMap: коли надходить нове джерело, switchMap скасовує попередні запити і починає новий. Тому виводиться лише fiveSecondSource.

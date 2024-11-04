@@ -12,7 +12,9 @@ const obs5 = new Observable(subscriber => {
         subscriber.next('Дані');
         subscriber.complete();
     }
-}).pipe(
+});
+
+obs5.pipe(
     catchError((err, caught) => {
         console.error('Помилка:', err.message);
         return caught
@@ -21,6 +23,4 @@ const obs5 = new Observable(subscriber => {
                 switchMap(() => of('Запасні дані'))
             );
     }),
-);
-
-obs5.subscribe(data => console.log('Отримані дані:', data));
+).subscribe(data => console.log('Отримані дані:', data));
